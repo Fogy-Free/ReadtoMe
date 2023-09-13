@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Read To Me</title>
+  <style>
+    body{
+      background-color: orange;
+      font-family: Arial, sans-serif;
+      font-size: x-large;
+      margin: 25px;
+    }
+    h1{
+      margin: 15px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      /*grid-template-rows: auto auto auto;*/
+      grid-gap: 8px;
+      align-items: start;
+
+    }
+    button{
+      font-size: x-large;
+      color: black;
+      outline: 1px solid yellow;
+      border-radius: 5px;
+      border: 0;
+      cursor: pointer;
+      width: 200px;
+      background: transparent;
+      top: 10px;
+      right: 10px;
+    }
+    button:focus {
+      outline: 2px solid cyan;
+      border-radius: 5px;
+    }
+    #drop-zone {
+      outline: 2px solid purple;
+      font-size: large;
+      border-radius: 5px;
+      width: 400px;
+    }
+  </style>
+
+</head>
+<body>
+
+  <h1>Read To Me</h1>
+  <div class="container">
+  <p>You can drag and drop text file into text area<br>
+    or type in the text area and <br>click Read Text to have it read to you</p>
+  <button type="button" onclick="readText()">Read Text</button>
+  <textarea id="drop-zone" cols="40" rows="10"></textarea>
+  </div>
+  <script>
+
+    document.getElementById('drop-zone').addEventListener('dragover', handleDragOver, false);
+    document.getElementById('drop-zone').addEventListener('drop', handleFileSelect, false);
+    function readText() {
+      let dz = document.getElementById('drop-zone');
+      const synth = window.speechSynthesis; // create speech utterance
+      // const utterance = new SpeechSynthesisUtterance('document.body.innerText'); // set voice and speed
+      // const utterance = new SpeechSynthesisUtterance(document.body.innerText); // set voice and speed
+      const utterance = new SpeechSynthesisUtterance(dz.value); // set voice and speed
+      utterance.voice = synth.getVoices()[3];
+      utterance.rate = 1; // play speech
+      synth.speak(utterance);
+    }
+    function handleDragOver(evt) {
+      evt.preventDefault();
+    }
+
+    function handleFileSelect(evt) {
+      evt.preventDefault();
+
+      var files = evt.dataTransfer.files;
+      if (files.length === 0) {
+        return;
+      }
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('drop-zone').value = e.target.result;
+      };
+      reader.readAsText(files[0]);
+    }
+  </script>
+<!--  <script src="T2S.js"></script>-->
+</body>
+</html>
